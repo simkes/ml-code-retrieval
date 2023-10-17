@@ -1,0 +1,1298 @@
+"using (TextFieldParser parser = new TextFieldParser(@""c:\temp\test.csv""))
+{
+    parser.TextFieldType = FieldType.Delimited;
+    parser.SetDelimiters("","");
+    while (!parser.EndOfData)
+    {
+        //Process row
+        string[] fields = parser.ReadFields();
+        foreach (string field in fields)
+        {
+            //TODO: Process field
+        }
+    }
+}"," I'm looking for a way through which I can read the CSV by column name, using the first record as the header / field names. "
+Suit[] suitValues = Enum.GetValues<Suit>(); foreach (Suit suit in Enum.GetValues<Suit>()){},How can you enumerate an enum in C#?
+YourEnum foo = (YourEnum)yourInt;,How do I cast an int to an enum in C#?
+"YourEnum foo = (YourEnum) Enum.Parse(typeof(YourEnum), yourString);
+
+// The foo.ToString().Contains("","") check is necessary for 
+// enumerations marked with a [Flags] attribute.
+if (!Enum.IsDefined(typeof(YourEnum), foo) && !foo.ToString().Contains("",""))
+{
+    throw new InvalidOperationException(
+        $""{yourString} is not an underlying value of the YourEnum enumeration.""
+    );
+}",cast string to enum
+"YourEnum foo = (YourEnum)Enum.ToObject(typeof(YourEnum), yourNum);",cast number to enum
+"public static class StringExtensions
+{
+    public static bool Contains(this string source, string toCheck, StringComparison comp)
+    {
+        return source?.IndexOf(toCheck, comp) >= 0;
+    }
+}","Is there a way to make the following return true?
+string title = ""ASTRINGTOTEST"";
+title.Contains(""string"");"
+"public static class ObjectCopier
+{
+    public static T Clone<T>(T source)
+    {
+        if (!typeof(T).IsSerializable)
+        {
+            throw new ArgumentException(""The type must be serializable."", nameof(source));
+        }
+        if (ReferenceEquals(source, null)) return default;
+
+        using var Stream stream = new MemoryStream();
+        IFormatter formatter = new BinaryFormatter();
+        formatter.Serialize(stream, source);
+        stream.Seek(0, SeekOrigin.Begin);
+        return (T)formatter.Deserialize(stream);
+    }
+}","I want to do deep cloning
+And then make changes to the new object that are not reflected in the original object."
+"catch (Exception ex)            
+{                
+    if (ex is FormatException || ex is OverflowException)
+    {
+        WebId = Guid.Empty;
+        return;
+    }
+    
+    throw;
+}",Catch multiple exceptions at once?
+"using (RNGCryptoServiceProvider rg = new RNGCryptoServiceProvider()) 
+{ 
+    byte[] rno = new byte[5];    
+    rg.GetBytes(rno);    
+    int randomvalue = BitConverter.ToInt32(rno, 0); 
+}",How do I generate a random integer in C#?
+"static byte[] GetBytes(string str)
+{
+    byte[] bytes = new byte[str.Length * sizeof(char)];
+    System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+    return bytes;
+}
+
+static string GetString(byte[] bytes)
+{
+    char[] chars = new char[bytes.Length / sizeof(char)];
+    System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+    return new string(chars);
+}","I'm going to encrypt the string. I can encrypt it without converting, but I'd still like to know why encoding comes to play here."
+public int X { get; set; } = x;,What is the best way to give a C# auto-property an initial value?
+"var today = DateTime.Today;
+var age = today.Year - birthdate.Year;
+if (birthdate.Date > today.AddYears(-age)) age--;","Given a DateTime representing a person's birthday, how do I calculate their age in years?"
+"//Create the data set and table
+DataSet ds = new DataSet(""New_DataSet"");
+DataTable dt = new DataTable(""New_DataTable"");
+
+//Set the locale for each
+ds.Locale = System.Threading.Thread.CurrentThread.CurrentCulture;
+dt.Locale = System.Threading.Thread.CurrentThread.CurrentCulture;
+OleDbConnection con = new OleDbConnection(dbConnectionString);
+con.Open();
+string sql = ""SELECT Whatever FROM MyDBTable;"";
+OleDbCommand cmd = new OleDbCommand(sql, con);
+OleDbDataAdapter adptr = new OleDbDataAdapter();
+adptr.SelectCommand = cmd;
+adptr.Fill(dt);
+con.Close();
+ds.Tables.Add(dt);
+ExcelLibrary.DataSetHelper.CreateWorkbook(""MyExcelFile.xls"", ds);",How can I create an Excel spreadsheet with C# without requiring Excel to be installed on the machine that's running the code?
+"public class Person 
+{
+    public int Age { get; set; }
+}
+public class Book 
+{
+    public Person Author { get; set; }
+}
+public class Example 
+{
+    public void Foo() 
+    {
+        Book b1 = new Book();
+        int authorAge = b1.Author.Age;
+    }
+}",NullReferenceException  scenarios
+"public void Dispose()
+{
+   //Free unmanaged resources
+   Win32.DestroyHandle(this.CursorFileBitmapIconServiceHandle);
+
+   //Free managed resources too
+   if (this.databaseConnection != null)
+   {
+      this.databaseConnection.Dispose();
+      this.databaseConnection = null;
+   }
+   if (this.frameBufferImage != null)
+   {
+      this.frameBufferImage.Dispose();
+      this.frameBufferImage = null;
+   }
+}","I know from reading Microsoft documentation that the ""primary"" use of the IDisposable interface is to clean up unmanaged resources."
+"public class MyExceptionClass : Exception
+{
+    public MyExceptionClass(string message, string extrainfo) : base(message)
+    {
+        //other stuff here
+    }
+}","If I inherit from a base class and want to pass something from the constructor of the inherited class to the constructor of the base class, how do I do that?"
+"const int SECOND = 1;
+const int MINUTE = 60 * SECOND;
+const int HOUR = 60 * MINUTE;
+const int DAY = 24 * HOUR;
+const int MONTH = 30 * DAY;
+
+var ts = new TimeSpan(DateTime.UtcNow.Ticks - yourDate.Ticks);
+double delta = Math.Abs(ts.TotalSeconds);
+
+if (delta < 1 * MINUTE)
+  return ts.Seconds == 1 ? ""one second ago"" : ts.Seconds + "" seconds ago"";
+
+if (delta < 2 * MINUTE)
+  return ""a minute ago"";
+
+if (delta < 45 * MINUTE)
+  return ts.Minutes + "" minutes ago"";
+
+if (delta < 90 * MINUTE)
+  return ""an hour ago"";
+
+if (delta < 24 * HOUR)
+  return ts.Hours + "" hours ago"";
+
+if (delta < 48 * HOUR)
+  return ""yesterday"";
+
+if (delta < 30 * DAY)
+  return ts.Days + "" days ago"";
+
+if (delta < 12 * MONTH)
+{
+  int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
+  return months <= 1 ? ""one month ago"" : months + "" months ago"";
+}
+else
+{
+  int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
+  return years <= 1 ? ""one year ago"" : years + "" years ago"";
+}","Given a specific DateTime value, how do I display relative time"
+"public static string ByteArrayToString(byte[] ba)
+{
+  StringBuilder hex = new StringBuilder(ba.Length * 2);
+  foreach (byte b in ba)
+    hex.AppendFormat(""{0:x2}"", b);
+  return hex.ToString();
+}",How can you convert a byte array to a hexadecimal string and vice versa?
+List<Order> SortedList = objListOrder.OrderBy(o=>o.OrderDate).ToList();,How to Sort a List<T> by a property in the object
+"string newText = ""abc"";
+form.Label.Invoke((MethodInvoker)delegate {
+    form.Label.Text = newText;
+});",How do I update the GUI from another thread?
+"Uri baseUri = new Uri(""http://www.contoso.com"");
+Uri myUri = new Uri(baseUri, ""catalog/shownew.htm"");",Path.Combine for URLs?
+" var values = new Dictionary<string, string>
+  {
+      { ""thing1"", ""hello"" },
+      { ""thing2"", ""world"" }
+  };
+
+  var content = new FormUrlEncodedContent(values);
+
+  var response = await client.PostAsync(""http://www.example.com/recepticle.aspx"", content);
+
+  var responseString = await response.Content.ReadAsStringAsync();",How can I make an HTTP POST request and send data in the body?
+"List<Person> distinctPeople = allPeople
+  .GroupBy(p => new {p.PersonId, p.FavoriteColor} )
+  .Select(g => g.First())
+  .ToList();",what would be the best way to have a list of Person depending on some of its properties?
+(EndDate - StartDate).TotalDays,how might one calculate the number of days between two dates in C#?
+"public static class EnumUtils
+{
+    public static T ParseEnum<T>(string value, T defaultValue) where T : struct, IConvertible
+    {
+        if (!typeof(T).IsEnum) throw new ArgumentException(""T must be an enumerated type"");
+        if (string.IsNullOrEmpty(value)) return defaultValue;
+
+        foreach (T item in Enum.GetValues(typeof(T)))
+        {
+            if (item.ToString().ToLower().Equals(value.Trim().ToLower())) return item;
+        }
+        return defaultValue;
+    }
+}",Create Generic method constraining T to an Enum
+"private static Random random = new Random();
+
+public static string RandomString(int length)
+{
+    const string chars = ""ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"";
+    return new string(Enumerable.Repeat(chars, length)
+        .Select(s => s[random.Next(s.Length)]).ToArray());
+}",How can I generate random alphanumeric strings?
+"public static string Base64Encode(string plainText) 
+{
+  var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+  return System.Convert.ToBase64String(plainTextBytes);
+} public static string Base64Decode(string base64EncodedData) 
+{
+  var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+  return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+}",How do I encode and decode a base64 string?
+"MethodInfo method = typeof(Sample).GetMethod(nameof(Sample.GenericMethod));
+MethodInfo generic = method.MakeGenericMethod(myType);
+generic.Invoke(this, null);","What's the best way to call a generic method when the type parameter isn't known at compile time, but instead is obtained dynamically at runtime?"
+"var results = persons.GroupBy(
+    p => p.PersonId, 
+    p => p.car,
+    (key, g) => new { PersonId = key, Cars = g.ToList() });",Is there a way I can group by PersonID and get the list of all the cars he has?
+"using System;
+using System.Web.Script.Serialization;
+
+public class MyDate
+{
+    public int year;
+    public int month;
+    public int day;
+}
+
+public class Lad
+{
+    public string firstName;
+    public string lastName;
+    public MyDate dateOfBirth;
+}
+
+class Program
+{
+    static void Main()
+    {
+        var obj = new Lad
+        {
+            firstName = ""Markoff"",
+            lastName = ""Chaney"",
+            dateOfBirth = new MyDate
+            {
+                year = 1901,
+                month = 4,
+                day = 30
+            }
+        };
+        var json = new JavaScriptSerializer().Serialize(obj);
+        Console.WriteLine(json);
+    }
+}",How do I turn a C# object into a JSON string in .NET?
+"dynamic stuff = JsonConvert.DeserializeObject(""{ 'Name': 'Jon Smith', 'Address': { 'City': 'New York', 'State': 'NY' }, 'Age': 42 }"");
+
+string name = stuff.Name;
+string address = stuff.Address.City;",Deserialize JSON into C# dynamic object?
+".GroupBy(x => new { x.Column1, x.Column2 })",How can I do GroupBy multiple columns in LINQ
+" public static object GetPropValue(object src, string propName)
+ {
+     return src.GetType().GetProperty(propName).GetValue(src, null);
+ }",Get property value from string using reflection
+"var results = from myRow in myDataTable.AsEnumerable()
+where myRow.Field<int>(""RowNo"") == 1
+select myRow;",I'm trying to perform a LINQ query on a DataTable object and bizarrely I am finding that performing such queries on DataTables is not straightforward.
+string result = System.Text.Encoding.UTF8.GetString(byteArray);,How to convert UTF-8 byte[] to string
+"public static void Shuffle<T>(this IList<T> list)  
+{  
+    int n = list.Count;  
+    while (n > 1) {  
+        n--;  
+        int k = rng.Next(n + 1);  
+        T value = list[k];  
+        list[k] = list[n];  
+        list[n] = value;  
+    }  
+}","What is the best way to randomize the order of a generic list in C#? I've got a finite set of 75 numbers in a list I would like to assign a random order to, in order to draw them for a lottery type application."
+"HttpClient client = new HttpClient();
+client.BaseAddress = new Uri(""http://example.com/"");
+client.DefaultRequestHeaders
+      .Accept
+      .Add(new MediaTypeWithQualityHeaderValue(""application/json""));//ACCEPT header
+
+HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, ""relativeAddress"");
+request.Content = new StringContent(""{\""name\"":\""John Doe\"",\""age\"":33}"",
+                                    Encoding.UTF8, 
+                                    ""application/json"");//CONTENT-TYPE header
+
+client.SendAsync(request)
+      .ContinueWith(responseTask =>
+      {
+          Console.WriteLine(""Response: {0}"", responseTask.Result);
+      });",I'm trying to set the Content-Type header of an HttpClient object as required by an API I am calling.
+"public static byte[] ReadFully(Stream input)
+{
+    byte[] buffer = new byte[16*1024];
+    using (MemoryStream ms = new MemoryStream())
+    {
+        int read;
+        while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+        {
+            ms.Write(buffer, 0, read);
+        }
+        return ms.ToArray();
+    }
+}",What is the prefered method for creating a byte array from an input stream?
+"IList<string> strings = new List<string>{""1"",""2"",""testing""};
+string joined = string.Join("","", strings);",What is the cleanest way to create a comma-separated list of string values from an IList<string> or IEnumerable<string>?
+int count = source.Count(f => f == symbol);,How would you count occurrences of a string (actually a char) within a string?
+"static string Tabs(int n)
+{
+    return new string('\t', n);
+}",Best way to repeat a character in C#
+"public static Stream GenerateStreamFromString(string s)
+{
+    var stream = new MemoryStream();
+    var writer = new StreamWriter(stream);
+    writer.Write(s);
+    writer.Flush();
+    stream.Position = 0;
+    return stream;
+}",How do I generate a stream from a string? I need to write a unit test for a method that takes a stream which comes from a text file
+"protected virtual bool IsFileLocked(FileInfo file)
+{
+    try
+    {
+        using(FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+        {
+            stream.Close();
+        }
+    }
+    catch (IOException)
+    {
+        //the file is unavailable because it is:
+        //still being written to
+        //or being processed by another thread
+        //or does not exist (has already been processed)
+        return true;
+    }
+
+    //file is not locked
+    return false;
+}","Is there a way to check if a file is in use? I'm writing a program in C# that needs to repeatedly access 1 image file. Most of the time it works, but if my computer's running fast, it will try to access the file before it's been saved back to the filesystem and throw an error: File in use by another process"
+"public static DateTime UnixTimeStampToDateTime( double unixTimeStamp )
+{
+    // Unix timestamp is seconds past epoch
+    DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+    dateTime = dateTime.AddSeconds( unixTimeStamp ).ToLocalTime();
+    return dateTime;
+}",How can I convert a Unix timestamp to DateTime and vice versa?
+"var fromAddress = new MailAddress(""from@gmail.com"", ""From Name"");
+var toAddress = new MailAddress(""to@example.com"", ""To Name"");
+const string fromPassword = ""fromPassword"";
+const string subject = ""Subject"";
+const string body = ""Body"";
+
+var smtp = new SmtpClient
+{
+    Host = ""smtp.gmail.com"",
+    Port = 587,
+    EnableSsl = true,
+    DeliveryMethod = SmtpDeliveryMethod.Network,
+    UseDefaultCredentials = false,
+    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+};
+using (var message = new MailMessage(fromAddress, toAddress)
+{
+    Subject = subject,
+    Body = body
+})
+{
+    smtp.Send(message);
+}","Sending email in .NET through Gmail Instead of relying on my host to send an email, I was thinking of sending the email messages using my Gmail account. The emails are personalized emails to the bands I play on my show."
+"[TestMethod]
+[ExpectedException(typeof(ArgumentException),
+    ""A userId of null was inappropriately allowed."")]
+public void NullUserIdInConstructor()
+{
+   LogonInfo logonInfo = new LogonInfo(null, ""P@ss0word"");
+}",How do I use Assert (or other Test class) to verify that an exception has been thrown when using MSTest/Microsoft.VisualStudio.TestTools.UnitTesting?
+"string configvalue1 = ConfigurationManager.AppSettings[""countoffiles""];
+string configvalue2 = ConfigurationManager.AppSettings[""logfilelocation""];",I'm working on a C# class library that needs to be able to read settings from the web.config or app.config file (depending on whether the DLL is referenced from an ASP.NET web application or a Windows Forms application).
+"Dictionary<string, int> myDict = new Dictionary<string, int>();
+myDict.Add(""one"", 1);
+myDict.Add(""four"", 4);
+myDict.Add(""two"", 2);
+myDict.Add(""three"", 3);
+
+var sortedDict = from entry in myDict orderby entry.Value ascending select entry;","I often have to sort a dictionary (consisting of keys & values) by value. For example, I have a hash of words and respective frequencies that I want to order by frequency."
+Stream stream = new MemoryStream(byteArray);,How do I convert struct System.Byte byte[] to a System.IO.Stream object in C#?
+"string subPath =""ImagesPath""; 
+bool exists = System.IO.Directory.Exists(Server.MapPath(subPath));
+if(!exists)
+    System.IO.Directory.CreateDirectory(Server.MapPath(subPath));","I use a FileUploader control in my application. I want to save a file to a specified folder. If this folder does not exist, I want to first create it, and then save my file to this folder. If the folder already exists, then just save the file in it."
+"public static string AssemblyDirectory
+{
+    get
+    {
+        string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+        UriBuilder uri = new UriBuilder(codeBase);
+        string path = Uri.UnescapeDataString(uri.Path);
+        return Path.GetDirectoryName(path);
+    }
+}","Is there a way to get the path for the assembly in which the current code resides? I do not want the path of the calling assembly, just the one containing the code."
+"var isNumeric = int.TryParse(""123"", out _);", identify if a string is a valid number?
+"ObjectType instance = (ObjectType)Activator.CreateInstance(objectType); 
+ObjectType instance = (ObjectType)Activator.CreateInstance(""MyAssembly"",""MyNamespace.ObjectType"");","One may not always know the Type of an object at compile-time, but may need to create an instance of the Type.
+How do you get a new object instance from a Type?"
+"public class Class1
+{
+    public int Method1(string input)
+    {
+        //... do something
+        return 0;
+    }
+
+    public int Method2(string input)
+    {
+        //... do something different
+        return 1;
+    }
+
+    public bool RunTheMethod(Func<string, int> myMethodName)
+    {
+        //... do stuff
+        int i = myMethodName(""My String"");
+        //... do more stuff
+        return true;
+    }
+
+    public bool Test()
+    {
+        return RunTheMethod(Method1);
+    }
+}",I have several methods all with the same parameter types and return values but different names and blocks. I want to pass the name of the method to run to another method that will invoke the passed method.
+"using (var fileStream = File.Create(""C:\\Path\\To\\File""))
+{
+    myOtherObject.InputStream.Seek(0, SeekOrigin.Begin);
+    myOtherObject.InputStream.CopyTo(fileStream);
+}","I have a StreamReader object that I initialized with a stream, now I want to save this stream to disk (the stream may be a .gif or .jpg or .pdf)."
+"System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+string version = fvi.FileVersion;","In AssemblyInfo there are two assembly versions:
+AssemblyVersion: Specify the version of the assembly being attributed.
+AssemblyFileVersion: Instructs a compiler to use a specific version number for the Win32 file version resource. The Win32 file version is not required to be the same as the assembly's version number.
+I can get the Assembly Version with the following line of code:
+Version version = Assembly.GetEntryAssembly().GetName().Version;
+But how can I get the Assembly File Version?"
+"System.IO.DirectoryInfo di = new DirectoryInfo(""YourPath"");
+
+foreach (FileInfo file in di.GetFiles())
+{
+    file.Delete(); 
+}
+foreach (DirectoryInfo dir in di.GetDirectories())
+{
+    dir.Delete(true); 
+}","Using C#, how can I delete all files and folders from a directory, but still keep the root directory?"
+"string data = ""THExxQUICKxxBROWNxxFOX"";
+
+return data.Split(new string[] { ""xx"" }, StringSplitOptions.None);","I've been using the Split() method to split strings, but this only appears to work if you are splitting a string by a character. Is there a way to split a string, with another string being the split by parameter?"
+"IEnumerable<Customer> filteredList = originalList
+  .GroupBy(customer => customer.CustomerId)
+  .Select(group => group.First());",Distinct() with lambda?
+"[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+public class MultipleButtonAttribute : ActionNameSelectorAttribute
+{
+    public string Name { get; set; }
+    public string Argument { get; set; }
+
+    public override bool IsValidName(ControllerContext controllerContext, string actionName, MethodInfo methodInfo)
+    {
+        var isValidName = false;
+        var keyValue = string.Format(""{0}:{1}"", Name, Argument);
+        var value = controllerContext.Controller.ValueProvider.GetValue(keyValue);
+
+        if (value != null)
+        {
+            controllerContext.Controller.ControllerContext.RouteData.Values[Name] = Argument;
+            isValidName = true;
+        }
+
+        return isValidName;
+    }
+}",How do you handle multiple submit buttons in ASP.NET MVC Framework?
+"System.IO.File.Move(""oldfilename"", ""newfilename"");",How do I rename a file using C#?
+"authorsList.RemoveAll(x => x.FirstName == ""Bob"");","Given that authorsList is of type List<Author>, how can I delete the Author elements from authorsList that are returned by the query into authors?"
+"class Foo {
+    public int A {get;set;}
+    public string B {get;set;}
+}
+...
+Foo foo = new Foo {A = 1, B = ""abc""};
+foreach(var prop in foo.GetType().GetProperties()) {
+    Console.WriteLine(""{0}={1}"", prop.Name, prop.GetValue(foo, null));
+}",How do I get a list of all the properties of a class?
+"Regex rgx = new Regex(""[^a-zA-Z0-9 -]"");
+str = rgx.Replace(str, """");",How do I remove all non alphanumeric characters from a string except dash and space characters?
+"DateTime myDate = DateTime.ParseExact(""2009-05-08 14:40:52,531"", ""yyyy-MM-dd HH:mm:ss,fff"",
+                                       System.Globalization.CultureInfo.InvariantCulture);",Converting a String to DateTime
+"string strCmdText;
+strCmdText= ""/C copy /b Image1.jpg + Archive.rar Image2.jpg"";
+System.Diagnostics.Process.Start(""CMD.exe"",strCmdText);",Is there any way to run command prompt commands from within a C# application?
+"List<ICloneable> oldList = new List<ICloneable>();
+List<ICloneable> newList = new List<ICloneable>(oldList.Count);
+
+oldList.ForEach((item) =>
+    {
+        newList.Add((ICloneable)item.Clone());
+    });","I have a generic list of objects in C#, and wish to clone the list. The items within the list are cloneable, but there doesn't seem to be an option to do list.Clone()."
+string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;,How do I get the current username in .NET using C#?
+var result = peopleList2.Where(p => peopleList1.All(p2 => p2.ID != p.ID));,"Use LINQ to get items in one List<>, that are not in another List<>"
+"bool IsPowerOfTwo(ulong x)
+{
+    return (x & (x - 1)) == 0;
+}",I needed a simple algorithm for checking if a number is a power of 2.
+typeof(MyType).GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMyInterface<>)) typeof(MyType).GetInterface(nameof(IMyInterface)) != null,Does reflection in C# offer a way to determine if some given System.Type type models some interface?
+"using System.Windows.Media;
+
+Color color = (Color)ColorConverter.ConvertFromString(""#FFDFD991"");","How can I get a color from a hexadecimal color code?
+
+I am reading a file and am getting a hexadecimal color code. I need to create the corresponding System.Windows.Media.Color instance for the hexadecimal color code. Is there an inbuilt method in the framework to do this?"
+"var watch = System.Diagnostics.Stopwatch.StartNew();
+// the code that you want to measure comes here
+watch.Stop();
+var elapsedMs = watch.ElapsedMilliseconds;",Calculate the execution time of a method
+"string result = String.Join(delimiter, list);",Is there any easy LINQ expression to concatenate my entire List<string> collection items to a single string with a delimiter character?
+"Properties.Settings.Default[""SomeProperty""] = ""Some Value"";
+Properties.Settings.Default.Save();","What I want to achieve is very simple: I have a Windows Forms (.NET 3.5) application that uses a path for reading information. This path can be modified by the user, by using the options form I provide.
+
+Now, I want to save the path value to a file for later use. This would be one of the many settings saved to this file. This file would sit directly in the application folder."
+"public class ClaimRequirementAttribute : TypeFilterAttribute
+{
+    public ClaimRequirementAttribute(string claimType, string claimValue) : base(typeof(ClaimRequirementFilter))
+    {
+        Arguments = new object[] {new Claim(claimType, claimValue) };
+    }
+}
+
+public class ClaimRequirementFilter : IAuthorizationFilter
+{
+    readonly Claim _claim;
+
+    public ClaimRequirementFilter(Claim claim)
+    {
+        _claim = claim;
+    }
+
+    public void OnAuthorization(AuthorizationFilterContext context)
+    {
+        var hasClaim = context.HttpContext.User.Claims.Any(c => c.Type == _claim.Type && c.Value == _claim.Value);
+        if (!hasClaim)
+        {
+            context.Result = new ForbidResult();
+        }
+    }
+}
+
+
+[Route(""api/resource"")]
+public class MyController : Controller
+{
+    [ClaimRequirement(MyClaimTypes.Permission, ""CanReadResource"")]
+    [HttpGet]
+    public IActionResult GetResource()
+    {
+        return Ok();
+    }
+}","I'm trying to make a custom authorization attribute in ASP.NET Core. In previous versions it was possible to override bool AuthorizeCore(HttpContextBase httpContext). But this no longer exists in AuthorizeAttribute.
+
+What is the current approach to make a custom AuthorizeAttribute?"
+Path.GetDirectoryName(path),What is the simplest way to get the directory that a file is in?
+"using System;
+using System.Linq;
+...
+var a1 = new int[] { 1, 2, 3};
+var a2 = new int[] { 1, 2, 3};
+var a3 = new int[] { 1, 2, 4};
+var x = a1.SequenceEqual(a2); // true
+var y = a1.SequenceEqual(a3); // false",Comparing two byte arrays in .NET
+"var result = dictionaries.SelectMany(dict => dict)
+                         .ToLookup(pair => pair.Key, pair => pair.Value)
+                         .ToDictionary(group => group.Key, group => group.First());","What's the best way to merge 2 or more dictionaries (Dictionary<TKey, TValue>) in C#? (3.0 features like LINQ are fine)."
+if (dict.ContainsKey(key)) { ... },"I can't find any methods that allow me to check for the existence of the key in the dictionary before attempting to access it, and if I try to read it (with .ToString()) and it doesn't exist then an exception is thrown"
+"bool IsValidEmail(string email)
+{
+    var trimmedEmail = email.Trim();
+
+    if (trimmedEmail.EndsWith(""."")) {
+        return false; // suggested by @TK-421
+    }
+    try {
+        var addr = new System.Net.Mail.MailAddress(email);
+        return addr.Address == trimmedEmail;
+    }
+    catch {
+        return false;
+    }
+}",What is the most elegant code to validate that a string is a valid email address?
+"XmlDocument doc = new XmlDocument();
+XmlElement root = doc.CreateElement(""root"");
+root.SetAttribute(""name"", ""value"");
+XmlElement child = doc.CreateElement(""child"");
+child.InnerText = ""text node"";
+root.AppendChild(child);
+doc.AppendChild(root);         XDocument doc = new XDocument(
+    new XElement(""root"",
+                 new XAttribute(""name"", ""value""),
+                 new XElement(""child"", ""text node"")));","I am now learning XmlDocument but I've just ran into XDocument and when I try to search the difference or benefits of them I can't find something useful, could you please tell me why you would use one over another ?"
+"NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+queryString.Add(""key1"", ""value1"");
+queryString.Add(""key2"", ""value2"");
+
+return queryString.ToString(); ",How to build a query string for a URL in C#?
+"using(PrincipalContext pc = new PrincipalContext(ContextType.Domain, ""YOURDOMAIN""))
+{
+    // validate the credentials
+    bool isValid = pc.ValidateCredentials(""myuser"", ""mypassword"");
+}",How can I validate a username and password against Active Directory? I simply want to check if a username and password are correct.
+"People.Aggregate((curMin, x) => (curMin == null || (x.DateOfBirth ?? DateTime.MaxValue) <
+    curMin.DateOfBirth ? x : curMin))",How to use LINQ to select object with minimum or maximum property value
+"private string GetExcelColumnName(int columnNumber)
+{
+    string columnName = """";
+
+    while (columnNumber > 0)
+    {
+        int modulo = (columnNumber - 1) % 26;
+        columnName = Convert.ToChar('A' + modulo) + columnName;
+        columnNumber = (columnNumber - modulo) / 26;
+    } 
+
+    return columnName;
+}",How do you convert a numerical number to an Excel column name in C# without using automation getting the value directly from Excel.
+"public static class Retry
+{
+    public static void Do(
+        Action action,
+        TimeSpan retryInterval,
+        int maxAttemptCount = 3)
+    {
+        Do<object>(() =>
+        {
+            action();
+            return null;
+        }, retryInterval, maxAttemptCount);
+    }
+
+    public static T Do<T>(
+        Func<T> action,
+        TimeSpan retryInterval,
+        int maxAttemptCount = 3)
+    {
+        var exceptions = new List<Exception>();
+
+        for (int attempted = 0; attempted < maxAttemptCount; attempted++)
+        {
+            try
+            {
+                if (attempted > 0)
+                {
+                    Thread.Sleep(retryInterval);
+                }
+                return action();
+            }
+            catch (Exception ex)
+            {
+                exceptions.Add(ex);
+            }
+        }
+        throw new AggregateException(exceptions);
+    }
+}",Occasionally I have a need to retry an operation several times before giving up.
+"int number = 1;
+//D4 = pad with 0000
+string outputValue = String.Format(""{0:D4}"", number);
+Console.WriteLine(outputValue);//Prints 0001
+//OR
+outputValue = number.ToString().PadLeft(4, '0');
+Console.WriteLine(outputValue);//Prints 0001 as well",In C# I have an integer value which need to be convereted to string but it needs to add zeros before
+" XmlSerializer ser = new XmlSerializer(typeof(Cars));
+    Cars cars;
+    using (XmlReader reader = XmlReader.Create(path))
+    {
+        cars = (Cars) ser.Deserialize(reader);
+    }",How do I Deserialize this XML document
+"int timeout = 1000;
+var task = SomeOperationAsync(cancellationToken);
+if (await Task.WhenAny(task, Task.Delay(timeout, cancellationToken)) == task)
+{
+    // Task completed within timeout.
+    // Consider that the task may have faulted or been canceled.
+    // We re-await the task so that any exceptions/cancellation is rethrown.
+    await task;
+
+}
+else
+{
+    // timeout/cancellation logic
+}","I want to wait for a Task<T> to complete with some special rules: If it hasn't completed after X milliseconds, I want to display a message to the user. And if it hasn't completed after Y milliseconds, I want to automatically request cancellation."
+"using Newtonsoft.Json;
+
+[JsonProperty(PropertyName = ""FooBar"")]
+public string Foo { get; set; }","I have some data in a C# DataSet object. I can serialize it right now using a Json.net converter like this
+DataSet data = new DataSet();
+// do some work here to populate 'data'
+string output = JsonConvert.SerializeObject(data);
+However, this uses the property names from data when printing to the .json file. I would like to change the property names to be something different (say, change 'foo' to 'bar')."
+"public static Byte[] PdfSharpConvert(String html)
+{
+    Byte[] res = null;
+    using (MemoryStream ms = new MemoryStream())
+    {
+        var pdf = TheArtOfDev.HtmlRenderer.PdfSharp.PdfGenerator.GeneratePdf(html, PdfSharp.PageSize.A4);
+        pdf.Save(ms);
+        res = ms.ToArray();
+    }
+    return res;
+}",Convert HTML to PDF in .NET  I want to generate a PDF by passing HTML contents to a function.
+.OrderByDescending(x => x.Delivery.SubmissionDate);,I have a LINQ query that I want to order by the most recently created date.
+System.Reflection.MethodBase.GetCurrentMethod().Name,How to get the name of the current method from code
+"XmlDocument xmlDoc= new XmlDocument(); // Create an XML document object
+xmlDoc.Load(""yourXMLFile.xml""); // Load the XML document from the specified file
+
+// Get elements
+XmlNodeList girlAddress = xmlDoc.GetElementsByTagName(""gAddress"");
+XmlNodeList girlAge = xmlDoc.GetElementsByTagName(""gAge""); 
+XmlNodeList girlCellPhoneNumber = xmlDoc.GetElementsByTagName(""gPhone"");
+
+// Display the results
+Console.WriteLine(""Address: "" + girlAddress[0].InnerText);
+Console.WriteLine(""Age: "" + girlAge[0].InnerText);
+Console.WriteLine(""Phone Number: "" + girlCellPhoneNumber[0].InnerText);",Is there a simple method of parsing XML files in C#?
+"var myKey = types.FirstOrDefault(x => x.Value == ""one"").Key;",How do I get a Dictionary key by value in C#?
+"FileAttributes attr = File.GetAttributes(@""c:\Temp"");
+
+if (attr.HasFlag(FileAttributes.Directory))
+    MessageBox.Show(""Its a directory"");
+else
+    MessageBox.Show(""Its a file"");",At the moment I am doing something like this to determine whether the path is a file or a directory
+"private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+public static DateTime FromUnixTime(long unixTime)
+{
+    return epoch.AddSeconds(unixTime);
+}",How do you convert Unix epoch time into real time in C#?
+"using (var client = new WebClient())
+{
+    client.DownloadFile(""http://example.com/file/song/a.mpeg"", ""a.mpeg"");
+}",How can I download a file from a URL in C#?
+"public static List<List<T>> Split<T>(IList<T> source)
+{
+    return  source
+        .Select((x, i) => new { Index = i, Value = x })
+        .GroupBy(x => x.Index / 3)
+        .Select(x => x.Select(v => v.Value).ToList())
+        .ToList();
+}","Is there any way I can separate a List<SomeObject> into several separate lists of SomeObject, using the item index as the delimiter of each split?"
+" public static <T> void f(FList<? extends T> list, Consumer<? super T> action) {
+        Objects.requireNonNull(action);
+        foldl(list, null, (nothing, element) -> {
+            action.accept(element);
+            return nothing;
+        });
+    }",for each method for list
+"public static <T, K> FList<K> f(FList<? extends T> list, Function<? super T, ? extends K> mapper) {
+        Objects.requireNonNull(mapper);
+        return foldr(list, empty(), (item, mapped) -> cons(mapper.apply(item), mapped));
+    }","map method, returns new list"
+"public static <T> FList<T> f(FList<? extends T> list, Predicate<? super T> filter) {
+        Objects.requireNonNull(filter);
+        return foldr(list, empty(),
+            (item, filtered) -> filter.test(item) ? cons(item, filtered) : filtered);
+    }",filter and return new list
+"private static Comparator<Movie> c() {
+        return Comparator.comparing(Movie::getRating, Comparator.reverseOrder())
+            .thenComparing(Movie::getTitle);
+    }",compare movies by rating and title
+"public List<Movie> func(int limit) {
+        checkLimit(limit);
+        return database.movies()
+            .sorted(compareByRatingThenTitle())
+            .limit(limit)
+            .toList();
+    }",returns list of most popular movies with limit
+"public List<Actor> func(Genre genre, Year fromInclusive,Year toExclusive) {Objects.requireNonNull(genre);
+        Objects.requireNonNull(fromInclusive);
+        Objects.requireNonNull(toExclusive);
+        if (!fromInclusive.isBefore(toExclusive)) {
+            throw new IllegalArgumentException();
+        }
+        return database.movies()
+            .filter(movie -> movie.getGenre().equals(genre))
+            .filter(movie -> movie.getReleaseYear().isBefore(toExclusive)
+                && !movie.getReleaseYear().isBefore(fromInclusive))
+            .flatMap(movie -> movie.getCast().stream())
+            .distinct()
+            .sorted(Comparator.comparing(Actor::getLastName).thenComparing(Actor::getFirstName))
+            .toList();
+    }",list of actors acting in a movie of particular genre with specified time gap
+"public Map<Actor, Movie> func() {
+        record ActorWithMovie(Actor actor, Movie movie) {
+        }
+        return database.movies()
+            .flatMap(movie -> movie.getCast().stream()
+                .map(actor -> new ActorWithMovie(actor, movie)))
+            .collect(toMap(
+                ActorWithMovie::actor,
+                ActorWithMovie::movie,
+                BinaryOperator.minBy(compareByRatingThenTitle())));
+    }",for every Actor find Movies with highest rating
+"public Map<Year, List<Movie>> func(int limit) {
+        checkLimit(limit);
+        return database.movies()
+            .collect(Collectors.groupingBy(Movie::getReleaseYear, Collectors.collectingAndThen(
+                Collectors.toList(),
+                movies -> movies.stream()
+                    .sorted(compareByRatingThenTitle())
+                    .limit(limit)
+                    .toList()
+            )));
+    }",collect top rated movies by years
+"public List<FileBlockLocation> f(byte[] value) throws IOException {
+        checkNotClosed();
+        Objects.requireNonNull(value);
+        List<FileBlockLocation> filledBlocks = new ArrayList<>();
+        int bytesWritten = 0;
+        while (bytesWritten < value.length) {
+            createFileIfNeeded();
+            var blockToWrite = emptyBlocks.remove(emptyBlocks.size() - 1);
+            int bytesToWrite = Math.min(value.length - bytesWritten, blockToWrite.size());
+            try (RandomAccessFile fileToWrite = new RandomAccessFile(blockToWrite.fileName(), ""rw"")) {
+            fileToWrite.seek(blockToWrite.offset());
+            fileToWrite.write(value, bytesWritten, bytesToWrite);
+            }
+    
+            if (blockToWrite.size() - bytesToWrite > 0) {
+            emptyBlocks.add(
+                new FileBlockLocation(blockToWrite.fileName(),
+                    blockToWrite.offset() + bytesToWrite,
+                    blockToWrite.size() - bytesToWrite));
+            }
+            filledBlocks.add(
+                new FileBlockLocation(blockToWrite.fileName(), blockToWrite.offset(), bytesToWrite));
+            bytesWritten += bytesToWrite;
+        }
+        return filledBlocks;
+    }","writes the value to a file, returns the blocks in which the value was written to"
+"int i, count, f1 = 0, f2 = 1, f3 = 0;
+            Console.Write(""""Enter the Limit : """");
+            count = int.Parse(Console.ReadLine());
+            Console.WriteLine(f1);
+            Console.WriteLine(f2);
+            for (i = 0; i <= count; i++)
+            {
+                f3 = f1 + f2;
+                Console.WriteLine(f3);
+                f1 = f2;
+                f2 = f3;
+            }",Generate Fibonacci Series
+"int i, number, fact;
+            Console.WriteLine(""""Enter the Number"""");
+            number = int.Parse(Console.ReadLine());
+            fact = number;
+            for (i = number - 1; i >= 1; i--)
+            {
+                fact = fact * i;
+            }",get factorial
+" int num, x;
+            num = int.Parse(Console.ReadLine());
+            for (x = 1; x <= num; x++)
+            {
+                if (num % x == 0)
+                {
+                    Console.WriteLine(x);
+                }
+            }",print factors of number
+"public Dictionary<string, decimal> f(MyDbContext dbContext)
+{
+    Dictionary<string, decimal> result = new Dictionary<string, decimal>();
+    if (dbContext != null)
+    {
+        try
+        {
+            result = dbContext.Products
+                .GroupBy(p => p.Category)
+                .Select(g => new { Category = g.Key, TotalSales = g.Sum(p => p.Sales) })
+                .ToDictionary(x => x.Category, x => x.TotalSales);
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+    return result;
+}",Get the total sales for each product category
+"public List<Product> f(MyDbContext dbContext, int top)
+{
+    List<Product> res = new List<Product>();
+    if (dbContext != null)
+    {
+        try
+        {
+            res = dbContext.Products
+                .OrderByDescending(p => p.Sales)
+                .Take(top)
+                .ToList();
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+    return res;
+}",Get the top selling products
+"public List<Customer> f(MyDbContext dbContext, int top)
+{
+    List<Customer> topCustomers = new List<Customer>();
+    if (dbContext != null)
+    {
+        try
+        {
+            topCustomers = dbContext.Customers
+                .OrderByDescending(c => c.Purchases.Count)
+                .Take(top)
+                .ToList();
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+    return topCustomers;
+}",Get the customers who have made the most purchases
+"public List<Product> f(MyDbContext dbContext)
+{
+    List<Product> products = new List<Product>();
+    if (dbContext != null)
+    {
+        try
+        {
+            products = dbContext.Products
+                .Where(p => p.Stock == 0)
+                .ToList();
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+    return products;
+}",Get the products that are currently out of stock
+"public void f(MyDbContext dbContext)
+{
+    if (dbContext != null)
+    {
+        try
+        {
+            var products = dbContext.Products.ToList();
+            foreach (var product in products)
+            {
+                product.Stock -= product.Sales;
+                product.Sales = 0;
+            }
+            dbContext.SaveChanges();
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+}",Update the stock levels based on the sales
+" public Dictionary<string, decimal> f(MyDbContext dbContext)
+{
+    Dictionary<string, decimal> res = new Dictionary<string, decimal>();
+    if (dbContext != null)
+    {
+        try
+        {
+            res = dbContext.Sales
+                .GroupBy(s => s.Date.Month)
+                .Select(g => new { Month = g.Key, TotalSales = g.Sum(s => s.Amount) })
+                .ToDictionary(x => x.Month.ToString(), x => x.TotalSales);
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+    return res;
+}",Get the total sales for each month
+"public List<Customer> f(MyDbContext dbContext)
+{
+    List<Customer> inactiveCustomers = new List<Customer>();
+    if (dbContext != null)
+    {
+        try
+        {
+            DateTime oneYearAgo = DateTime.Now.AddYears(-1);
+            inactiveCustomers = dbContext.Customers
+                .Where(c => !c.Purchases.Any(p => p.Date > oneYearAgo))
+                .ToList();
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+    return inactiveCustomers;
+}",Get the customers who have not made any purchases in the last year
+"public List<string> f(MyDbContext dbContext, int top)
+{
+    List<string> result = new List<string>();
+    if (dbContext != null)
+    {
+        try
+        {
+            result = dbContext.Products
+                .GroupBy(p => p.Category)
+                .OrderByDescending(g => g.Count())
+                .Take(top)
+                .Select(g => g.Key)
+                .ToList();
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+    return result;
+}",Get the most popular product categories
+"public decimal f(MyDbContext dbContext)
+{
+    decimal result = 0;
+    if (dbContext != null)
+    {
+        try
+        {
+            result = dbContext.Customers
+                .Average(c => c.Purchases.Sum(p => p.Amount));
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+    return result;
+}",Get the average sales per customer
+"public List<Customer> f(MyDbContext dbContext, int top)
+{
+    List<Customer> result = new List<Customer>();
+    if (dbContext != null)
+    {
+        try
+        {
+            result = dbContext.Customers
+                .OrderByDescending(c => c.Purchases.Sum(p => p.Amount))
+                .Take(top)
+                .ToList();
+        }
+        catch (Exception)
+        {
+            // Exception handling without message
+        }
+    }
+    return result;
+}",Get the customers who have spent the most money
+"void f(
+    std::istream &in,
+    int32_t x,
+    int32_t y,
+    int32_t width,
+    int32_t height
+) {
+    in.read(reinterpret_cast<char *>(&bitmap_file_header), HEADER_SIZE);
+    in.read(reinterpret_cast<char *>(&bitmap_info), INFO_SIZE);
+    if (x < 0 || y < 0 || width <= 0 || x + width > bitmap_info.bi_width ||
+        height <= 0 || y + height > bitmap_info.bi_height) {
+        throw invalid_requested_area();
+    }
+    if (bitmap_info.bi_size != INFO_SIZE) {
+        throw invalid_header_size(bitmap_info.bi_size);
+    }
+    if (bitmap_info.bi_height <= 0) {
+        throw non_positive_height(bitmap_info.bi_height);
+    }
+    if (bitmap_info.bi_bit_count != 24) {
+        throw unexpected_number_of_bits_per_pixel(bitmap_info.bi_bit_count);
+    }
+    if (bitmap_info.bi_clr_used != 0) {
+        throw color_palette_usage();
+    }
+    aligned_width = add_padding(bitmap_info.bi_width);
+    // NOLINTNEXTLINE (bugprone-narrowing-conversions)
+    data.resize(aligned_width * bitmap_info.bi_height);
+    // NOLINTNEXTLINE (bugprone-narrowing-conversions)
+    in.read(data.data(), aligned_width * bitmap_info.bi_height);
+}",Read image to array
+"void f(int32_t x, int32_t y, int32_t width, int32_t height) {
+    if (width == bitmap_info.bi_width && height == bitmap_info.bi_height) {
+        return;
+    }
+    temp_aligned_width = add_padding(width);
+    // NOLINTNEXTLINE (bugprone-narrowing-conversions)
+    temp.resize(temp_aligned_width * height, 0);
+    int32_t new_row = 1;
+    for (int32_t row = bitmap_info.bi_height - y;
+         row > bitmap_info.bi_height - y - height; row--) {
+        for (int32_t column = 0; column < 3 * width; column++) {
+            temp[column + (height - new_row) * temp_aligned_width] =
+                data[column + 3 * x + (row - 1) * aligned_width];
+        }
+        new_row++;
+    }
+    change_image_information(width, height);
+}",The function that cuts a part of the image
+"void f(int32_t width, int32_t height) {
+    temp_aligned_width = add_padding(width);
+    // NOLINTNEXTLINE (bugprone-narrowing-conversions)
+    temp.resize(height * temp_aligned_width, 0);
+    for (int32_t row = 0; row < height; row++) {
+        for (int32_t column = 0; column < width; column++) {
+            temp[row * temp_aligned_width + column * 3 + 0] =
+                data[column * aligned_width + (height - 1 - row) * 3 + 0];
+            temp[row * temp_aligned_width + column * 3 + 1] =
+                data[column * aligned_width + (height - 1 - row) * 3 + 1];
+            temp[row * temp_aligned_width + column * 3 + 2] =
+                data[column * aligned_width + (height - 1 - row) * 3 + 2];
+        }
+    }
+    change_image_information(width, height);
+}",rotate the image
+"void f(
+    const std::vector<bank::transaction> &transactions,
+    int balance,
+    boost::asio::ip::tcp::iostream &client
+) {
+    size_t transaction_count = 0;
+    client >> transaction_count;
+    transaction_count = std::min(transaction_count, transactions.size());
+    client << """"CPTY\tBAL\tCOMM"""" << std::endl;
+    // NOLINTNEXTLINE (bugprone-narrowing-conversions)
+    for (auto it = transactions.end() - transaction_count;
+         it < transactions.end(); it++) {
+        if (it->counterparty == nullptr) {
+            client << """"-\t"""" << it->balance_delta_xts << '\t' << it->comment
+                   << std::endl;
+        } else {
+            client << it->counterparty->name() << '\t' << it->balance_delta_xts
+                   << '\t' << it->comment.substr(1) << std::endl;
+        }
+    }
+    client << """"===== BALANCE: """" << balance << """" XTS ====="""" << std::endl;
+}",Display the specified number of recent transactions
+"void f(
+    bank::user &user,
+    bank::ledger &ledger,
+    const std::string &command,
+    boost::asio::ip::tcp::iostream &client
+) {
+    if (text_to_command.count(command) == 0) {
+        client << """"Unknown command: '"""" + command + """"'"""" << std::endl;
+        return;
+    }
+    switch (text_to_command[command]) {
+        case command::BALANCE:
+            print_balance(user, client);
+            break;
+        case command::TRANSACTIONS:
+            user.snapshot_transactions([&](const auto &transactions,
+                                           int balance) {
+                print_transactions(transactions, balance, client);
+            });
+            break;
+        case command::MONITOR:
+            monitor(user, client);
+            break;
+        case command::TRANSFER:
+            transfer(user, client, ledger);
+            break;
+        default:
+            throw std::runtime_error(
+                """"No case added for enum value: """" + command
+            );
+    }
+}",Parses the entered command
+"void f(
+    user &counterparty,
+    int amount_xts,
+    const std::string &comment
+) {
+    if (this == &counterparty) {
+        throw self_transfer_error();
+    }
+    if (amount_xts <= 0) {
+        throw non_positive_transfer_error(amount_xts);
+    }
+    std::scoped_lock lock(m_mutex, counterparty.m_mutex);
+    if (m_balance < amount_xts) {
+        throw not_enough_funds_error(m_balance, amount_xts);
+    }
+    add_new_transaction(counterparty, -amount_xts, comment);
+    counterparty.add_new_transaction(*this, amount_xts, comment);
+}",transfer money from one user to another
+"m &operator*=(m &lhs, const m &rhs) {
+    m::check_dimension_match(lhs.columns(), rhs.rows());
+    std::vector<std::vector<int>> product(
+        lhs.rows(), std::vector<int>(rhs.columns())
+    );
+    for (int row = 0; row < lhs.rows(); row++) {
+        for (int column = 0; column < rhs.columns(); column++) {
+            unsigned int sum = 0;
+            for (int i = 0; i < lhs.columns(); i++) {
+                sum += lhs.m_m[row][i] * rhs.m_m[i][column];
+            }
+            product[row][column] = static_cast<int>(sum);
+        }
+    }
+    lhs.m_m = product;
+    return lhs;
+}",product of matrices
+" vector &operator=(const vector &other) {
+        if (this == &other) {
+            return *this;
+        }
+        if (m_capacity < other.size()) {
+            T *temp_data =
+                allocate(round_number_up_to_nearest_power_of_two(other.size()));
+            deallocate(m_size);
+            m_capacity = round_number_up_to_nearest_power_of_two(other.size());
+            m_data = std::exchange(temp_data, nullptr);
+        } else {
+            destruct_elements(0, m_size);
+        }
+        m_size = other.size();
+        for (size_t i = 0; i < m_size; i++) {
+            new (m_data + i) T(other[i]);
+        }
+        return *this;
+}",copy assignment operator for a vector
+" std::ifstream &operator>>(std::ifstream &file, m &m) {
+    int rows = 0;
+    int columns = 0;
+    file >> rows >> columns;
+    if (file.eof()) {
+        throw invalid_file_format();
+    }
+    if (rows == 0 || columns == 0) {
+        rows = columns = 0;
+    }
+    std::vector<std::vector<int>> new_m(rows, std::vector<int>(columns));
+    for (auto &row : new_m) {
+        for (auto &element : row) {
+            file >> element;
+            if (file.eof()) {
+                throw invalid_file_format();
+            }
+        }
+    }
+    m.m_m = new_m;
+    return file;
+}",Read the matrix from the file
